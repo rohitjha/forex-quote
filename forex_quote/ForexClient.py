@@ -10,7 +10,11 @@ class ForexClient:
     def _get(self, path, params={}):
         payload = {'api_key': self.api_key}
         payload = { **params, **payload }
-        response = requests.get(self.base_uri + path, params=payload, timeout=10)
+        try:
+            response = requests.get(self.base_uri + path, params=payload, timeout=10)
+            response.raise_for_status()
+        except Exception as e:
+            print('Encountered exception when sending GET to response.url: ' + e)
         return json.loads(response.text)
     
     def get_quota(self):
